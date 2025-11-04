@@ -1,0 +1,25 @@
+import pandas as pd
+import folium
+
+# اقرأ ملف CSV
+df = pd.read_csv("cafes_restaurants.csv")  # تأكدي يكون اسم الملف مطابق
+
+# حدد مركز الخريطة على الرياض تقريباً
+map_center = [24.7136, 46.6753]
+m = folium.Map(location=map_center, zoom_start=13)
+
+# أضف العلامات لكل مكان
+for idx, row in df.iterrows():
+    folium.CircleMarker(
+        location=[row['lat'], row['lon']],
+        radius=6,
+        color=row['color'],  # اللون حسب العمود
+        fill=True,
+        fill_color=row['color'],
+        popup=f"Name: {row['name']}<br>Type: {row['category']}<br>Station: {row['station']}<br>Rating: {row['rating']}"
+    ).add_to(m)
+
+# احفظ الخريطة في ملف HTML
+m.save("riyadh_map.html")
+
+print("Map created! Open 'riyadh_map.html' to see it.")
